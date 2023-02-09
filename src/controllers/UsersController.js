@@ -4,8 +4,8 @@ const AppError = require("../utils/AppError");
 const sqliteConnection = require("../database/sqlite");
 
 class UsersController {
-  async create(req, res) {
-    const { name, email, password } = req.body;
+  async create(request, response) {
+    const { name, email, password } = request.body;
 
     const database = await sqliteConnection();
     const checkUserExists = await database.get(
@@ -22,11 +22,11 @@ class UsersController {
       [name, email, hashedPassword]
     );
 
-    return res.status(201).json();
+    return response.status(201).json();
   }
-  async update(req, res) {
-    const { name, email, password, old_password } = req.body;
-    const user_id = req.user.id;
+  async update(request, response) {
+    const { name, email, password, old_password } = request.body;
+    const user_id = request.user.id;
 
     const database = await sqliteConnection();
     const user = await database.get("SELECT * FROM users WHERE id = (?)", [
@@ -68,7 +68,7 @@ class UsersController {
       [user.name, user.email, user.password, user_id]
     );
 
-    return res.json();
+    return response.json();
   }
 }
 module.exports = UsersController;
